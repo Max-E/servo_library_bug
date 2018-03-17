@@ -1,0 +1,20 @@
+I think that there is a bug in Servo when compiled into a shared library. This
+is different than creating a shared library just for libservo-- I'm trying to
+make a shared library that contains libservo PLUS some of my own code.
+
+This is a short but complete program that illustrates the problem. It consists
+of a shared library that is written in Rust, plus a Python component that tries
+to open the library with dlopen. The shared library contains just libservo and
+no code of its own.
+
+To reproduce the bug (on Linux)
+* Make sure you have the right Rust compiler version for Servo commit 2f8fa32.
+* Run "cargo build" in this directory to build the Rust component.
+* Run ./main.py in this directory.
+
+Expected results:
+Nothing should happen, the program should just silently exit because it doesn't
+do anything.
+
+Actual results:
+The dlopen will fail on librust_component.so, because it has undefined symbols.
